@@ -37,7 +37,8 @@ public class MainPageTest {
     public void search() {
         mainPage.searchButton.click();
 
-        $("[data-test='search-input']").sendKeys("Selenium");
+        // Wait for the search input to be visible
+        $("[data-test='search-input']").shouldBe(visible).sendKeys("Selenium");
         $("button[data-test='full-search-button']").click();
 
         $("input[data-test='search-input']").shouldHave(attribute("value", "Selenium"));
@@ -53,7 +54,13 @@ public class MainPageTest {
     @Test
     public void navigationToAllTools() {
         mainPage.seeDeveloperToolsButton.click();
-        mainPage.findYourToolsButton.click();
+
+        // Handle potential overlay
+        if ($("div.jetbrains-cookies-backdrop").is(visible)) {
+            $("div.jetbrains-cookies-backdrop").click();
+        }
+
+        mainPage.findYourToolsButton.shouldBe(visible).click();
 
         $("#products-page").shouldBe(visible);
 
